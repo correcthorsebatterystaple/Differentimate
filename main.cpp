@@ -15,6 +15,12 @@ int operate(int left, int right, char op) {
   } else if (op == '-') {
     return left - right;
   }
+}
+
+int precedence(char op) {
+  if (op == '^') return 3;
+  if (op == '*' || op == '/') return 2;
+  if (op == '+' || op == '-') return 1;
   return 0;
 }
 
@@ -23,6 +29,14 @@ int main(int argc, char const *argv[])
   string exp;
   exp = argv[1];
   stack<char> operators;
+int comparePrecedence(char op1, char op2) {
+  return precedence(op1) - precedence(op2);
+}
+
+bool isLeftAssoc(char op) {
+  return op == '/' || op == '-';
+}
+
   queue<char> postfix;
   stack<char> calc;
 
