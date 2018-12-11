@@ -3,17 +3,21 @@
 #include <stack>
 #include <typeinfo>
 #include <queue>
+#include <cmath>
 using namespace std;
 
 bool isOperator(char x) {
-  return x == '+' || x == '-';
+  return x == '+' || x == '-' || x == '*' || x == '/' || x == '^';
 }
 
 int operate(int left, int right, char op) {
-  if (op == '+') {
-    return left + right;
-  } else if (op == '-') {
-    return left - right;
+  switch (op) {
+    case '+' : return left + right;
+    case '-' : return left - right;
+    case '*' : return left * right;
+    case '/' : return left / right;
+    case '^' : return pow(left,right);
+    default : return 0;
   }
 }
 
@@ -24,11 +28,6 @@ int precedence(char op) {
   return 0;
 }
 
-int main(int argc, char const *argv[])
-{
-  string exp;
-  exp = argv[1];
-  stack<char> operators;
 int comparePrecedence(char op1, char op2) {
   return precedence(op1) - precedence(op2);
 }
@@ -37,23 +36,46 @@ bool isLeftAssoc(char op) {
   return op == '/' || op == '-';
 }
 
+int main(int argc, char const *argv[])
+{
+  string exp;
+  exp = argv[1];
+  stack<char> operators;
   queue<char> postfix;
   stack<char> calc;
 
+  //TODO: make work for multiple digit values by tokenizing input
 
+  // iterate through argument string (expression)
   for(int i = 0; i < exp.length(); i++) {
-    if (!isOperator(exp[i])) {
-      postfix.push(exp[i]-48);
-    } else {
-      operators.push(exp[i]);
+    char token = exp[i];
+    if (token >= '0' && token <= '9'){ // if token is number
+      postfix.push(token-'0');
+    } else if (isOperator(token)) { // if token is operator
+      // while operators are not empty and, 
+      // token has lower precedence than top or
+      // token has same precedence as top and is left associative 
+      while (!operators.empty() && (
+        comparePrecedence(operators.top(),token) > 0 || (
+          comparePrecedence(operators.top(),token)==0 && 
+          isLeftAssoc(operators.top())
+          )
+        )
+      ) {
+        postfix.push(operators.top());
+        operators.pop();
+      }
+      operators.push(token);
     }
   }
 
+  // push all remaining operators to the output
   while (!operators.empty()) {
     postfix.push(operators.top());
     operators.pop();
   }
 
+  // read from output
   while (!postfix.empty()) {
     if (!isOperator(postfix.front())) {
       calc.push(postfix.front());
@@ -68,6 +90,7 @@ bool isLeftAssoc(char op) {
     }
     postfix.pop();
   }
+
   printf("%d", calc.top());
   cout << endl;
   return 0;
