@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include <queue>
 #include <cmath>
+#include "DiffUnit.h"
 using namespace std;
 
 bool isOperator(string x) {
