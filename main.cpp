@@ -53,7 +53,8 @@ vector<string> tokenize(string exp) {
     string token(1,exp[i]);
     // if it is a variable being implicitly multiplied
     if (i-1 >= 0 && !isOperator(string(1,exp[i-1])) && isalpha(exp[i])) tokens.push_back("*");
-    // if (i-1 >= 0 && !isOperator(string(1,exp[i-1])) && exp[i] == '(') tokens.push_back("*");
+    if (i-1 >= 0 && !isOperator(string(1,exp[i-1])) && 
+    exp[i-1] != '(' && exp[i] == '(') tokens.push_back("*");
     // make multidigit numbers one token
     while (i+1 < exp.length() && isdigit(exp[i]) &&isdigit(exp[i+1])) {
       token += exp[i+1];
