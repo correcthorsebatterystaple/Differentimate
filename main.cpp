@@ -39,6 +39,11 @@ int main(int argc, char const *argv[])
     tokens.push_back(token);
   }
 
+  // print all the tokens
+  for (int i = 0; i < tokens.size()-1; i++) {
+    cout << tokens.at(i) << ",";
+  }
+  cout << tokens.at(tokens.size()-1) << endl;
   
   return 0;
 }
