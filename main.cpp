@@ -18,34 +18,6 @@ bool isNumber(string s) {
   return true;
 }
 
-vector<string> smushBrackets(vector<string> tokens) {
-  vector<string> newTokens;
-  int brackets = 0;
-  string token = "";
-  for (int i = 0; i < tokens.size(); i++) {
-    if (tokens.at(i) == "(") {
-      // checks if already in brackets or not
-      if (!brackets) newTokens.push_back(tokens.at(i));
-      else token += tokens.at(i);
-      brackets++;
-      continue;
-    }
-    if (tokens.at(i) == ")") {
-      brackets--;
-      // checks if now in brackets or not
-      if (!brackets) {
-        newTokens.push_back(token);
-        newTokens.push_back(tokens.at(i));
-        token = "";
-      } else token += tokens.at(i);
-      continue;
-    }
-    if (brackets) token += tokens.at(i);
-    else newTokens.push_back(tokens.at(i));
-  }
-  return newTokens;
-}
-
 vector<string> tokenize(string exp) {
   vector<string> tokens;
   // iterate through the expression and tokenize
@@ -73,8 +45,9 @@ int main(int argc, char const *argv[])
   queue<string> postfix;
   stack<string> calc;
 
-  vector<string> tokens = smushBrackets(tokenize(exp));
-
+  vector<string> tokens = tokenize(exp);
+  //TODO: make tree class
+  //TODO: make parse trees
   // print all the tokens
   for (int i = 0; i < tokens.size()-1; i++) {
     cout << tokens.at(i) << ",";
