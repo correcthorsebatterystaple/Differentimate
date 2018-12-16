@@ -1,2 +1,2 @@
 CXX=g++
-CXXFLAGS= -Wall -g
+CXXFLAGS= -g
