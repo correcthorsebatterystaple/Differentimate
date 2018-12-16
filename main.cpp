@@ -4,8 +4,29 @@
 #include <typeinfo>
 #include <queue>
 #include <cmath>
-#include "DiffUnit.h"
+#include "node.h"
 using namespace std;
+
+int operate(int left, int right, string op) {
+  if (op == "+") return left + right;
+  if (op == "-") return left - right;
+  if (op == "*") return left * right;
+  if (op == "/") return left / right;
+  if (op == "^") return pow(left,right);
+  return 0;
+}
+int precedence(string op) {
+  if (op == "^") return 3;
+  if (op == "*" || op == "/") return 2;
+  if (op == "+" || op == "-") return 1;
+  return 0;
+}
+int compare(string op1, string op2) {
+  return precedence(op1) - precedence(op2);
+}
+bool isLeftAssoc(string op) {
+  return op == "/" || op == "-";
+}
 
 bool isOperator(string x) {
   return x == "+" || x == "-" || x == "*" || x == "/" || x == "^";
@@ -37,17 +58,56 @@ vector<string> tokenize(string exp) {
   return tokens;
 }
 
+vector<string> infixToPostfix(vector<string> tokens) {
+
+  stack<string> operators;
+  vector<string> postfix;
+
+  for(int i = 0; i < tokens.size(); i++) {
+    string token = tokens.at(i);
+    if (isOperator(token)) { // if token is operator
+      // while operators are not empty and, 
+      // token has lower precedence than top or
+      // token has same precedence as top and is left associative 
+      while (!operators.empty() && (
+        compare(operators.top(),token) > 0 || (
+          compare(operators.top(),token)==0 && 
+          isLeftAssoc(token)
+          )
+        )
+      ) {
+        postfix.push_back(operators.top());
+        operators.pop();
+      }
+      operators.push(token);
+    } else if (token == "(") {
+      operators.push(token);
+    } else if (token == ")") { 
+      while (operators.top() != "(") {
+        postfix.push_back(operators.top());
+        operators.pop();
+      }
+      operators.pop();
+    } else {
+      postfix.push_back(token);
+    }
+  }
+  // push all remaining operators to the output
+  while (!operators.empty()) {
+    postfix.push_back(operators.top());
+    operators.pop();
+  }
+  
+  return postfix;
+}
+
 int main(int argc, char const *argv[])
 {
   string exp;
   exp = argv[1];
-  stack<string> operators;
-  queue<string> postfix;
-  stack<string> calc;
 
   vector<string> tokens = tokenize(exp);
-  //TODO: make tree class
-  //TODO: make parse trees
+  tokens = infixToPostfix(tokens);
   // print all the tokens
   for (int i = 0; i < tokens.size()-1; i++) {
     cout << tokens.at(i) << ",";
