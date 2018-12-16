@@ -7,14 +7,6 @@
 #include "node.h"
 using namespace std;
 
-int operate(int left, int right, string op) {
-  if (op == "+") return left + right;
-  if (op == "-") return left - right;
-  if (op == "*") return left * right;
-  if (op == "/") return left / right;
-  if (op == "^") return pow(left,right);
-  return 0;
-}
 int precedence(string op) {
   if (op == "^") return 5;
   if (op == "/") return 4;
