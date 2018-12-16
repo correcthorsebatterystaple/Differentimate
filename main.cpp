@@ -16,9 +16,11 @@ int operate(int left, int right, string op) {
   return 0;
 }
 int precedence(string op) {
-  if (op == "^") return 3;
-  if (op == "*" || op == "/") return 2;
-  if (op == "+" || op == "-") return 1;
+  if (op == "^") return 5;
+  if (op == "/") return 4;
+  if (op == "*") return 3;
+  if (op == "+") return 2;
+  if (op == "-") return 1;
   return 0;
 }
 int compare(string op1, string op2) {
@@ -73,7 +75,7 @@ vector<string> infixToPostfix(vector<string> tokens) {
         compare(operators.top(),token) > 0 || (
           compare(operators.top(),token)==0 && 
           isLeftAssoc(operators.top())
-          )
+          ) && operators.top() != "(" 
         )
       ) {
         postfix.push_back(operators.top());
