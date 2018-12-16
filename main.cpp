@@ -72,7 +72,7 @@ vector<string> infixToPostfix(vector<string> tokens) {
       while (!operators.empty() && (
         compare(operators.top(),token) > 0 || (
           compare(operators.top(),token)==0 && 
-          isLeftAssoc(token)
+          isLeftAssoc(operators.top())
           )
         )
       ) {
@@ -101,6 +101,44 @@ vector<string> infixToPostfix(vector<string> tokens) {
   return postfix;
 }
 
+queue<string> vectorToQueue(vector<string> v) {
+  queue<string> q;
+  for (size_t i = 0; i < v.size(); i++) {
+    q.push(v.at(i));
+  }
+  return q;
+}
+
+Node* parseTree(vector<string> tokens) {
+  queue<string> postfix = vectorToQueue(tokens);
+  stack<Node*> operators;
+  stack<Node*> nodes;
+  while (!postfix.empty()) {
+    string token = postfix.front();
+    if (isOperator(token)) {
+      Node* op = new Node(token);
+      op->setRight(nodes.top());
+      nodes.pop();
+      op->setLeft(nodes.top());
+      nodes.pop();
+      nodes.push(op);
+    } else {
+      Node* num = new Node(token);
+      nodes.push(num);
+    }
+    postfix.pop();
+  }
+  return nodes.top();
+}
+
+void printTree(Node* node, string spaces) {
+  if (node) {
+    cout << spaces << node->getValue() << endl;
+    string _spaces = spaces+"  ";
+    printTree(node->getLeft(), _spaces);
+    printTree(node->getRight(), _spaces);
+  }
+}
 int main(int argc, char const *argv[])
 {
   string exp;
@@ -113,6 +151,10 @@ int main(int argc, char const *argv[])
     cout << tokens.at(i) << ",";
   }
   cout << tokens.at(tokens.size()-1) << endl;
+
+  Node* root = parseTree(tokens);
+  string spaces = "";
+  printTree(root, spaces);
   
   return 0;
 }
