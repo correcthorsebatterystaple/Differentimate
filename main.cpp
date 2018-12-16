@@ -7,6 +7,7 @@
 #include "node.h"
 using namespace std;
 
+// returns the precedence of the operator
 int precedence(string op) {
   if (op == "^") return 5;
   if (op == "/") return 4;
@@ -15,24 +16,23 @@ int precedence(string op) {
   if (op == "-") return 1;
   return 0;
 }
+
+// compares the precedences of param operators
 int compare(string op1, string op2) {
   return precedence(op1) - precedence(op2);
 }
+
+// checks if operator is left associative
 bool isLeftAssoc(string op) {
   return op == "/" || op == "-";
 }
 
+// checks if character is an operator
 bool isOperator(string x) {
   return x == "+" || x == "-" || x == "*" || x == "/" || x == "^";
 }
 
-bool isNumber(string s) {
-  for (int i = 0; i < s.length(); i++) {
-    if (!isdigit(s[i])) return false;
-  }
-  return true;
-}
-
+// tokenizes given string
 vector<string> tokenize(string exp) {
   vector<string> tokens;
   // iterate through the expression and tokenize
@@ -52,6 +52,7 @@ vector<string> tokenize(string exp) {
   return tokens;
 }
 
+// converts an infix tokenized vector to a postfix tokenized vector
 vector<string> infixToPostfix(vector<string> tokens) {
 
   stack<string> operators;
@@ -95,6 +96,7 @@ vector<string> infixToPostfix(vector<string> tokens) {
   return postfix;
 }
 
+// converts given vector to a queue
 queue<string> vectorToQueue(vector<string> v) {
   queue<string> q;
   for (size_t i = 0; i < v.size(); i++) {
@@ -103,6 +105,7 @@ queue<string> vectorToQueue(vector<string> v) {
   return q;
 }
 
+// parses the given postfix tokens into a parse tree
 Node* parseTree(vector<string> tokens) {
   queue<string> postfix = vectorToQueue(tokens);
   stack<Node*> operators;
@@ -125,6 +128,7 @@ Node* parseTree(vector<string> tokens) {
   return nodes.top();
 }
 
+// prints the tree following the input node
 void printTree(Node* node, string spaces) {
   if (node) {
     cout << spaces << node->getValue() << endl;
@@ -133,6 +137,7 @@ void printTree(Node* node, string spaces) {
     printTree(node->getRight(), _spaces);
   }
 }
+
 int main(int argc, char const *argv[])
 {
   string exp;
