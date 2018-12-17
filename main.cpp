@@ -39,7 +39,7 @@ vector<string> tokenize(string exp) {
   for (int i = 0; i < exp.length(); i++) {
     string token(1,exp[i]);
     // if it is a variable being implicitly multiplied
-    if (i-1 >= 0 && !isOperator(string(1,exp[i-1])) && isalpha(exp[i])) tokens.push_back("*");
+    if (i-1 >= 0 && !isOperator(string(1,exp[i-1])) && isalpha(exp[i]) && exp[i-1] != '(') tokens.push_back("*");
     if (i-1 >= 0 && !isOperator(string(1,exp[i-1])) && 
     exp[i-1] != '(' && exp[i] == '(') tokens.push_back("*");
     // make multidigit numbers one token
@@ -128,16 +128,6 @@ Node* parseTree(vector<string> tokens) {
   return nodes.top();
 }
 
-// prints the tree following the input node
-void printTree(Node* node, string spaces) {
-  if (node) {
-    cout << spaces << node->getValue() << endl;
-    string _spaces = spaces+"  ";
-    printTree(node->getLeft(), _spaces);
-    printTree(node->getRight(), _spaces);
-  }
-}
-
 int main(int argc, char const *argv[])
 {
   string exp;
@@ -153,7 +143,7 @@ int main(int argc, char const *argv[])
 
   Node* root = parseTree(tokens);
   string spaces = "";
-  printTree(root, spaces);
+  root->print(spaces);
   
   return 0;
 }
