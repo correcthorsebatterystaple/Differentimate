@@ -70,8 +70,17 @@ class Node {
     }
 
     std::string getString() {
-      //TODO : get the expression with brackets of current node
-      return "str";
+      std::string str = "";
+      if (this->left) {
+        str += "(";
+        str += this->left->getString();
+      }
+      str += this->value;
+      if (this->right) {
+        str += this->right->getString();
+        str += ")";
+      }
+      return str;
     }
 
     std::string differentiate(std::string wrt) {
@@ -88,12 +97,17 @@ class Node {
         std::string right = this->right->differentiate(wrt);
         return left + op + right;
       } else if (op == "*") {
-        
-          return "(" + this->left->getString() + ")" + op + "(" + this->right->differentiate(wrt) + ")" + "+"  + "(" + this->left->differentiate(wrt) + ")" + op+ "(" + this->right->getString() + ")";
+        // product rule
+        return "(" + this->left->getString() + ")" + "*" + "(" + this->right->differentiate(wrt) + ")" + "+"  + "(" + this->left->differentiate(wrt) + ")" + "*" + "(" + this->right->getString() + ")";
 
       } else if (op == "/") {
-        //TODO : differentiation for quotients
-        return "0";
+        std::string top = this->left->getString();
+        std::string bottom = this->right->getString();
+        std::string dTop = this->left->differentiate(wrt);
+        std::string dBottom = this->right->differentiate(wrt);
+
+        return "(" + dTop + "*" + bottom + "-" + top + "*" + dBottom + ")/" + "(" + bottom + ")^2";
+
       } else if (op == "^") {
         //TODO : differentiation for exponents
         return "0";
