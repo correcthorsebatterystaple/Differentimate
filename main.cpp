@@ -42,6 +42,7 @@ vector<string> tokenize(string exp) {
     if (i-1 >= 0 && !isOperator(string(1,exp[i-1])) && isalpha(exp[i]) && exp[i-1] != '(') tokens.push_back("*");
     if (i-1 >= 0 && !isOperator(string(1,exp[i-1])) && 
     exp[i-1] != '(' && exp[i] == '(') tokens.push_back("*");
+    //TODO: tokenize functions
     // make multidigit numbers one token
     while (i+1 < exp.length() && isdigit(exp[i]) &&isdigit(exp[i+1])) {
       token += exp[i+1];
