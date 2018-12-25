@@ -135,16 +135,18 @@ int main(int argc, char const *argv[])
   exp = argv[1];
 
   vector<string> tokens = tokenize(exp);
-  tokens = infixToPostfix(tokens);
   // print all the tokens
   for (int i = 0; i < tokens.size()-1; i++) {
     cout << tokens.at(i) << ",";
   }
   cout << tokens.at(tokens.size()-1) << endl;
+  tokens = infixToPostfix(tokens);
 
   Node* root = parseTree(tokens);
-  string spaces = "";
-  root->print(spaces);
+  // string spaces = "";
+  // root->print(spaces);
+
+  cout << root->differentiate("x") << endl;
   
   return 0;
 }
