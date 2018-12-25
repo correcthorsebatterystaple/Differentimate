@@ -98,7 +98,13 @@ class Node {
         return left + op + right;
       } else if (op == "*") {
         // product rule
-        return "(" + this->left->getString() + ")" + "*" + "(" + this->right->differentiate(wrt) + ")" + "+"  + "(" + this->left->differentiate(wrt) + ")" + "*" + "(" + this->right->getString() + ")";
+        if (!this->right->find(wrt)) {
+          return "(" + this->left->differentiate(wrt) + ")" + "*" + "(" + this->right->getString() + ")";
+        } else if (!this->left->find(wrt)) {
+          return "(" + this->left->getString() + ")" + "*" + "(" + this->right->differentiate(wrt) + ")";
+        } else {
+          return "(" + this->left->getString() + ")" + "*" + "(" + this->right->differentiate(wrt) + ")" + "+"  + "(" + this->left->differentiate(wrt) + ")" + "*" + "(" + this->right->getString() + ")";
+        }
 
       } else if (op == "/") {
         std::string top = this->left->getString();
